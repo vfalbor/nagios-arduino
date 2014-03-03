@@ -1,0 +1,83 @@
+-- *************************************************************************
+-- INSTITUTO GALEGO DE FISICA DE ALTAS ENERXIAS usc-igfae.mib
+-- *************************************************************************
+--
+-- Title: IGFAE TOP LEVEL control MIB
+--
+-- Version : 1.0.0
+--
+-- Created: Friday, January, 3, 2014
+--
+-- Revision History:
+-- *************************************************************************
+--
+-- 01/03/14 - v 1.0.0 Initial version
+--
+-- *************************************************************************
+-- *************************************************************************
+-- usc-igfae-MIB { iso(1) org(3) dod(6) internet(1) private(4)
+--    enterprises(1) RedIRIS (7547) centrosIRIS (1) USC (23) IGFAE (2) }
+
+USC-IGFAE-MIB DEFINITIONS ::= BEGIN
+
+IMPORTS
+--   enterprises, IpAddress, Gauge, TimeTicks             FROM RFC1155-SMI
+   enterprises                                          FROM RFC1155-SMI
+--   DisplayString                                        FROM RFC1213-MIB
+   OBJECT-TYPE                                          FROM RFC-1212
+   TRAP-TYPE                                            FROM RFC-1215;
+
+rediris                   OBJECT IDENTIFIER ::= { enterprises 7547 }
+centrosiris               OBJECT IDENTIFIER ::= { rediris 1 }
+usc                       OBJECT IDENTIFIER ::= { centrosiris 23 }
+igfae                     OBJECT IDENTIFIER ::= { usc 2}
+environment               OBJECT IDENTIFIER ::= { igfae 1}
+traps                     OBJECT IDENTIFIER ::= { igfae 2}
+-- object types
+
+-- the environment group
+
+-- The traps group
+-- These OIDs allows IGFAE traps to be sent with additional arguments
+
+roomTemp OBJECT-TYPE
+   SYNTAX INTEGER    
+   ACCESS read-only
+   STATUS mandatory
+   DESCRIPTION
+      "Ambient room temperature."
+   ::= { environment 1 }
+
+
+-- TRAPS
+
+temperatureCritical TRAP-TYPE
+   ENTERPRISE traps
+   VARIABLES { roomTemp }
+   DESCRIPTION
+       "SEVERE: The temperature has reached a critical value."
+   --#TYPE "ENVIRONMENTAL: Temperature critical"
+   --#SUMMARY "Room temperature has reached a critical level."
+   --#SEVERITY SEVERE
+   --#TIMEINDEX 1
+   --#HELP ""
+   --#HELPTAG 0
+   --#STATE CRITICAL
+   ::= 1
+
+temperatureOK TRAP-TYPE
+   ENTERPRISE traps
+   VARIABLES { roomTemp }
+   DESCRIPTION
+       "INFORMATIONAL: The temperature has returned to normal values."
+   --#TYPE "ENVIRONMENTAL: Temperature OK"
+   --#SUMMARY "Room temperature has returned to normal levels."
+   --#SEVERITY INFORMATIONAL
+   --#TIMEINDEX 1
+   --#HELP ""
+   --#HELPTAG 0
+   --#STATE OPERATIONAL
+   ::= 2
+
+END
+
